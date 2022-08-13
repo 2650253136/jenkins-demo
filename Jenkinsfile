@@ -1,6 +1,6 @@
 node('haimaxy-jnlp') {
     stage('Prepare') {
-        echo "1.Prepare Stage"
+        echo "1. Prepare Stage"
         checkout scm
         script {
             build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
@@ -10,14 +10,14 @@ node('haimaxy-jnlp') {
         }
     }
     stage('Test') {
-      echo "2.Test Stage"
+        echo "2. Test Stage"
     }
     stage('Build') {
-        echo "3.Build Docker Image Stage"
+        echo "3. Build Docker Image Stage"
         sh "docker build -t registry.cn-shenzhen.aliyuncs.com/bananain/yunwei:godemo-${build_tag} ."
     }
     stage('Push') {
-        echo "4.Push Docker Image Stage"
+        echo "4. Push Docker Image Stage"
         withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
             sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword} registry.cn-shenzhen.aliyuncs.com"
             sh "docker push registry.cn-shenzhen.aliyuncs.com/bananain/yunwei:godemo-${build_tag}"
